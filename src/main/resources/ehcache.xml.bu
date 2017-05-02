@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xmlns='http://www.ehcache.org/v3'>
+
+  <!--http://www.ehcache.org/documentation/3.0/examples.html-->
+  <!--https://github.com/ehcache/ehcache3/blob/master/107/src/test/resources/ehcache-example.xml-->
+  <!--
+  <thread-pools> 
+      <thread-pool alias="defaultDiskPool" min-size="1" max-size="3"/>
+  </thread-pools>
+  <disk-store thread-pool="defaultDiskPool"/>
+-->
+  <cache alias="sikm">
+    <key-type>java.lang.Long</key-type>
+    <value-type>edu.utexas.arlut.ciads.scratch.App$Foo</value-type>
+    <resources>
+      <heap unit="entries">2000</heap>
+      <persistence directory="/tmp" />
+    </resources>
+  </cache>
+  
+
+
+  <!--
+  <cache name="sampleCache3"
+         maxEntriesLocalHeap="500"
+         eternal="false"
+         overflowToDisk="true"
+         diskPersistent="true"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="600"
+         diskExpiryThreadIntervalSeconds="1"
+         memoryStoreEvictionPolicy="LFU">
+
+  </cache>
+  -->
+</config>

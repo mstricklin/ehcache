@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
+import org.ehcache.config.CacheRuntimeConfiguration;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
@@ -35,6 +36,7 @@ public class App {
         Cache<Long, Foo> myCache = cm.getCache( "sikm", Long.class, Foo.class );
         log.info( "myCache: {}", myCache );
 
+        org.ehcache.impl.copy.SerializingCopier sc;
         myCache.put( 1L, Foo.of( 1L, "da one!" ) );
         Foo value = myCache.get( 1L );
         log.info( "Cached Foo {}", value );
@@ -44,23 +46,26 @@ public class App {
 
 
         log.info("=======================");
-        Cache<Long, Foo> sCache =
-                cm.createCache( "fooThroughCache",
-                                CacheConfigurationBuilder.newCacheConfigurationBuilder( Long.class,
-                                                                                        Foo.class,
-                                                                                        ResourcePoolsBuilder.heap( 10 ) )
-                                                         .withLoaderWriter( new SampleLoaderWriter( ) )
-                                                         .add( WriteBehindConfigurationBuilder
-                                                                      .newBatchedWriteBehindConfiguration( 1, TimeUnit.SECONDS, 3)
-                                                                      .queueSize(3)
-                                                                      .concurrencyLevel(1)
-                                                                      .enableCoalescing())
-                                                         .build() );
+//        Cache<Long, Foo> sCache =
+//                cm.createCache( "fooThroughCache",
+//                                CacheConfigurationBuilder.newCacheConfigurationBuilder( Long.class,
+//                                                                                        Foo.class,
+//                                                                                        ResourcePoolsBuilder.heap( 10 ) )
+//                                                         .withLoaderWriter( new SampleLoaderWriter( ) )
+//                                                         .add( WriteBehindConfigurationBuilder
+//                                                                      .newBatchedWriteBehindConfiguration( 1, TimeUnit.SECONDS, 3)
+//                                                                      .queueSize(3)
+//                                                                      .concurrencyLevel(1)
+//                                                                      .enableCoalescing())
+//                                                         .build() );
+//
+//        Foo f0 = sCache.get( 1L );
+//        sCache.put( 1L, f0 );
+//        sCache.get( 1L );
+//        sCache.put( 2L, Foo.of( 2L, "2L" ) );
 
-        Foo f0 = sCache.get( 1L );
-        sCache.put( 1L, f0 );
-        sCache.get( 1L );
-        sCache.put( 2L, Foo.of( 2L, "2L" ) );
+
+
         cm.close();
 
 
