@@ -1,48 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ehcache:config
-        xmlns:ehcache="http://www.ehcache.org/v3"
-        xmlns:jcache="http://www.ehcache.org/v3/jsr107">
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xsi:schemaLocation="http://www.ehcache.org/v3
+  http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
+
+    <default-serializers>
+        <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XVertex">edu.utexas.arlut.ciads.scratch.xgraph.serializer.XVertexSerializer</serializer>
+        <!--<serializer type="java.lang.Long">org.ehcache.jsr107.LongSerializer</serializer>-->
+    </default-serializers>
+    <default-copiers></default-copiers>
+
+    <persistence directory="cache"/>
+    <thread-pools>
+        <thread-pool alias="defaultDiskPool" min-size="1" max-size="3" default="true"/>
+        <thread-pool alias="defaultWriteBehindPool" min-size="1" max-size="3"/>
+        <thread-pool alias="cache2Pool" min-size="1" max-size="2"/>
+    </thread-pools>
+
+    <!--<disk-store thread-pool="defaultDiskPool" />-->
+    <event-dispatch thread-pool="defaultEventPool"/>
+    <write-behind thread-pool="defaultWriteBehindPool"/>
+    <disk-store thread-pool="defaultDiskPool"/>
 
 
-    <ehcache:persistence directory="/tmp/ehcache"/>
-    <ehcache:thread-pools>
-        <ehcache:thread-pool alias="defaultDiskPool" min-size="1" max-size="2"/>
-        <ehcache:thread-pool alias="cache2Pool" min-size="1" max-size="2"/>
-    </ehcache:thread-pools>
-
-    <ehcache:disk-store thread-pool="defaultDiskPool" />
 
 
     <!-- TODO: check on serializer...kryo? -->
-    <!-- TODO: copy on read -->
-    <ehcache:cache-template name="element-store-template">
-        <ehcache:key-type copier="org.ehcache.impl.copy.SerializingCopier"
+    <!-- TODO: copy on read? -->
+    <cache-template name="element-store-template">
+        <key-type copier="org.ehcache.impl.copy.SerializingCopier"
                           serializer="org.ehcache.jsr107.LongSerializer">
             java.lang.Long
-        </ehcache:key-type>
-        <ehcache:expiry>
-            <ehcache:none/>
-        </ehcache:expiry>
-        <ehcache:resources>
-            <ehcache:heap unit="GB">1</ehcache:heap>
-            <ehcache:disk unit="GB" persistent="true">50</ehcache:disk>
-        </ehcache:resources>
-        <ehcache:disk-store-settings thread-pool="pool-disk" writer-concurrency="2"/>
-    </ehcache:cache-template>
+        </key-type>
+        <expiry>
+            <none/>
+        </expiry>
+        <resources>
+            <heap unit="GB">1</heap>
+            <disk unit="GB" persistent="true">50</disk>
+        </resources>
+        <disk-store-settings thread-pool="pool-disk" writer-concurrency="2"/>
+    </cache-template>
 
 
 
-    <ehcache:cache alias="sikm">
-        <ehcache:key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</ehcache:key-type>
-        <ehcache:value-type copier="org.ehcache.impl.copy.SerializingCopier">edu.utexas.arlut.ciads.scratch.App$Foo
-        </ehcache:value-type>
-        <ehcache:listeners dispatcher-thread-pool="cache2Pool"/>
-        <ehcache:resources>
-            <ehcache:heap unit="MB">100</ehcache:heap>
-            <ehcache:disk unit="GB" persistent="true">100</ehcache:disk>
-        </ehcache:resources>
+    <cache alias="sikm">
+        <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
+        <value-type copier="org.ehcache.impl.copy.SerializingCopier">edu.utexas.arlut.ciads.scratch.App$Foo
+            </value-type>
+        <listeners dispatcher-thread-pool="cache2Pool"/>
+        <resources>
+            <heap unit="MB">100</heap>
+            <disk unit="GB" persistent="true">100</disk>
+        </resources>
 
-        <ehcache:disk-store-settings thread-pool="cache2Pool" writer-concurrency="2"/>
-    </ehcache:cache>
-</ehcache:config>
+        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
+    </cache>
+
+    <cache alias="vertices">
+        <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
+        <value-type copier="org.ehcache.impl.copy.SerializingCopier">
+            edu.utexas.arlut.ciads.scratch.xgraph.XVertex
+            </value-type>
+        <listeners dispatcher-thread-pool="cache2Pool"/>
+        <resources>
+            <heap unit="MB">100</heap>
+            <disk unit="GB" persistent="true">100</disk>
+        </resources>
+
+        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
+    </cache>
+</config>

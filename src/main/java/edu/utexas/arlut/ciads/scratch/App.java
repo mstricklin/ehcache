@@ -2,16 +2,14 @@ package edu.utexas.arlut.ciads.scratch;
 
 import static java.util.Collections.singletonMap;
 
+import edu.utexas.arlut.ciads.scratch.graph.Vertex;
+import edu.utexas.arlut.ciads.scratch.xgraph.XVertex;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
-import org.ehcache.config.CacheRuntimeConfiguration;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
-import org.ehcache.config.builders.WriteBehindConfigurationBuilder;
 import org.ehcache.spi.loaderwriter.BulkCacheLoadingException;
 import org.ehcache.spi.loaderwriter.BulkCacheWritingException;
 import org.ehcache.spi.loaderwriter.CacheLoaderWriter;
@@ -20,8 +18,8 @@ import org.ehcache.xml.XmlConfiguration;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
+// TODO: Try JCS?
 @Slf4j
 public class App {
     public static void main(String[] args) {
@@ -36,16 +34,23 @@ public class App {
         Cache<Long, Foo> myCache = cm.getCache( "sikm", Long.class, Foo.class );
         log.info( "myCache: {}", myCache );
 
-        org.ehcache.impl.copy.SerializingCopier sc;
         myCache.put( 1L, Foo.of( 1L, "da one!" ) );
         Foo value = myCache.get( 1L );
         log.info( "Cached Foo {}", value );
 //        foo();
 
         cm.removeCache( "sikm" );
+//        org.ehcache.core.internal.service.ServiceLocator
 
 
         log.info("=======================");
+
+        Cache<Long, XVertex> verticesCache = cm.getCache( "vertices", Long.class, XVertex.class );
+        XVertex v0 = XVertex.of(1L);
+        log.info("v0: {}", v0);
+        verticesCache.put( 1L, v0 );
+        v0 = verticesCache.get( 1L );
+        log.info("v0: {}", v0);
 //        Cache<Long, Foo> sCache =
 //                cm.createCache( "fooThroughCache",
 //                                CacheConfigurationBuilder.newCacheConfigurationBuilder( Long.class,
