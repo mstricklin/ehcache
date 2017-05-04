@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
+import org.ehcache.config.CacheConfiguration;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.spi.loaderwriter.BulkCacheLoadingException;
 import org.ehcache.spi.loaderwriter.BulkCacheWritingException;
@@ -19,7 +21,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Map;
 
-// TODO: Try JCS?
+// TODO: User Managed cache for xaction
 @Slf4j
 public class App {
     public static void main(String[] args) {
@@ -27,6 +29,12 @@ public class App {
 
         final URL myUrl = App.class.getClassLoader().getResource( "ehcache.xml" );
         XmlConfiguration xmlConfig = new XmlConfiguration( myUrl );
+//        Map<String, CacheConfiguration<?, ?>> cfg = xmlConfig.getCacheConfigurations();
+//        log.info("cfg: {}", cfg);
+//        log.info("cfg: {}", cfg.get( "sikm" ));
+//
+//        CacheConfigurationBuilder.newCacheConfigurationBuilder( cfg.get("sikm") );
+
         cm = CacheManagerBuilder.newCacheManager( xmlConfig );
 
         log.info( "CacheManager: {}", cm );

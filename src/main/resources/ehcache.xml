@@ -7,10 +7,12 @@
 
     <default-serializers>
         <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XVertex">edu.utexas.arlut.ciads.scratch.xgraph.serializer.XVertexSerializer</serializer>
+        <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XEdge">edu.utexas.arlut.ciads.scratch.xgraph.serializer.XEdgeSerializer</serializer>
         <!--<serializer type="java.lang.Long">org.ehcache.jsr107.LongSerializer</serializer>-->
     </default-serializers>
     <default-copiers></default-copiers>
 
+    <!--TODO: use system property for cache location-->
     <persistence directory="cache"/>
     <thread-pools>
         <thread-pool alias="defaultDiskPool" min-size="1" max-size="3" default="true"/>
@@ -46,6 +48,7 @@
 
 
     <cache alias="sikm">
+        <!--TODO: do we want a copier?-->
         <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
         <value-type copier="org.ehcache.impl.copy.SerializingCopier">edu.utexas.arlut.ciads.scratch.App$Foo
             </value-type>
@@ -63,6 +66,19 @@
         <value-type copier="org.ehcache.impl.copy.SerializingCopier">
             edu.utexas.arlut.ciads.scratch.xgraph.XVertex
             </value-type>
+        <listeners dispatcher-thread-pool="cache2Pool"/>
+        <resources>
+            <heap unit="MB">100</heap>
+            <disk unit="GB" persistent="true">100</disk>
+        </resources>
+
+        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
+    </cache>
+    <cache alias="edges">
+        <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
+        <value-type copier="org.ehcache.impl.copy.SerializingCopier">
+            edu.utexas.arlut.ciads.scratch.xgraph.XEdge
+        </value-type>
         <listeners dispatcher-thread-pool="cache2Pool"/>
         <resources>
             <heap unit="MB">100</heap>
