@@ -29,4 +29,7 @@ public class XVertex extends XElement implements Vertex {
     private XVertex(long id) {
         super(id);
     }
+    private XVertex() {
+        super(99);
+    }
 }

@@ -4,6 +4,7 @@ import static java.util.Collections.singletonMap;
 
 import edu.utexas.arlut.ciads.scratch.graph.Vertex;
 import edu.utexas.arlut.ciads.scratch.xgraph.XVertex;
+import edu.utexas.arlut.ciads.scratch.xgraph.serializer.SerializationClasses;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class App {
     public static void main(String[] args) {
         System.out.println( "Hello World!" );
+//        log.info( "Enum: {}", SerializationClasses.XEDGE);
 
         final URL myUrl = App.class.getClassLoader().getResource( "ehcache.xml" );
         XmlConfiguration xmlConfig = new XmlConfiguration( myUrl );

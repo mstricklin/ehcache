@@ -49,6 +49,7 @@
 
     <cache alias="sikm">
         <!--TODO: do we want a copier?-->
+        <!-- kryo copy> -->
         <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
         <value-type copier="org.ehcache.impl.copy.SerializingCopier">edu.utexas.arlut.ciads.scratch.App$Foo
             </value-type>
