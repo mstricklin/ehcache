@@ -6,9 +6,15 @@
   http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
 
     <default-serializers>
-        <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XVertex">edu.utexas.arlut.ciads.scratch.xgraph.serializer.XVertexSerializer</serializer>
-        <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XEdge">edu.utexas.arlut.ciads.scratch.xgraph.serializer.XEdgeSerializer</serializer>
-        <!--<serializer type="java.lang.Long">org.ehcache.jsr107.LongSerializer</serializer>-->
+        <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XVertex">
+            edu.utexas.arlut.ciads.scratch.xgraph.XVertex$Serializer
+        </serializer>
+        <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XEdge">
+            edu.utexas.arlut.ciads.scratch.xgraph.XEdge$Serializer
+        </serializer>
+        <serializer type="edu.utexas.arlut.ciads.scratch.xgraph.XElement$Properties">
+            edu.utexas.arlut.ciads.scratch.xgraph.XElement$Serializer
+        </serializer>
     </default-serializers>
     <default-copiers></default-copiers>
 
@@ -26,66 +32,48 @@
     <disk-store thread-pool="defaultDiskPool"/>
 
 
-
-
-    <!-- TODO: check on serializer...kryo? -->
-    <!-- TODO: copy on read? -->
+    <!-- TODO: copy on read? kryo copier? -->
     <cache-template name="element-store-template">
-        <key-type copier="org.ehcache.impl.copy.SerializingCopier"
-                          serializer="org.ehcache.jsr107.LongSerializer">
-            java.lang.Long
-        </key-type>
+        <key-type>java.lang.Long</key-type>
         <expiry>
             <none/>
         </expiry>
+        <listeners dispatcher-thread-pool="cache2Pool"/>
         <resources>
-            <heap unit="GB">1</heap>
-            <disk unit="GB" persistent="true">50</disk>
+            <heap unit="MB">100</heap>
+            <disk unit="MB" persistent="true">500</disk>
         </resources>
-        <disk-store-settings thread-pool="pool-disk" writer-concurrency="2"/>
+
+        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
+    </cache-template>
+    <cache-template name="property-store-template">
+        <key-type>java.lang.Long</key-type>
+        <value-type copier="org.ehcache.impl.copy.SerializingCopier">
+            edu.utexas.arlut.ciads.scratch.xgraph.XElement$Properties
+        </value-type>
+        <expiry>
+            <none/>
+        </expiry>
+        <listeners dispatcher-thread-pool="cache2Pool"/>
+        <resources>
+            <heap unit="MB">500</heap>
+            <disk unit="GB" persistent="true">1</disk>
+        </resources>
+
+        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
     </cache-template>
 
-
-
-    <cache alias="sikm">
-        <!--TODO: do we want a copier?-->
-        <!-- kryo copy> -->
-        <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
-        <value-type copier="org.ehcache.impl.copy.SerializingCopier">edu.utexas.arlut.ciads.scratch.App$Foo
-            </value-type>
-        <listeners dispatcher-thread-pool="cache2Pool"/>
-        <resources>
-            <heap unit="MB">100</heap>
-            <disk unit="GB" persistent="true">100</disk>
-        </resources>
-
-        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
-    </cache>
-
-    <cache alias="vertices">
-        <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
-        <value-type copier="org.ehcache.impl.copy.SerializingCopier">
+    <cache alias="vertices" uses-template="element-store-template">
+        <value-type>
             edu.utexas.arlut.ciads.scratch.xgraph.XVertex
-            </value-type>
-        <listeners dispatcher-thread-pool="cache2Pool"/>
-        <resources>
-            <heap unit="MB">100</heap>
-            <disk unit="GB" persistent="true">100</disk>
-        </resources>
-
-        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
+        </value-type>
     </cache>
-    <cache alias="edges">
-        <key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>
-        <value-type copier="org.ehcache.impl.copy.SerializingCopier">
+    <cache alias="vertex-properties" uses-template="property-store-template" />
+    <cache alias="edges" uses-template="element-store-template">
+        <value-type>
             edu.utexas.arlut.ciads.scratch.xgraph.XEdge
         </value-type>
-        <listeners dispatcher-thread-pool="cache2Pool"/>
-        <resources>
-            <heap unit="MB">100</heap>
-            <disk unit="GB" persistent="true">100</disk>
-        </resources>
-
-        <disk-store-settings thread-pool="defaultDiskPool" writer-concurrency="2"/>
     </cache>
+    <cache alias="edge-properties" uses-template="property-store-template" />
+
 </config>

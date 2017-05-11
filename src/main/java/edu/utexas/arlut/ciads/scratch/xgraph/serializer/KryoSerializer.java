@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class KryoSerializer implements AutoCloseable {
-    static KryoSerializer of() {
+    public static KryoSerializer of() {
         return new KryoSerializer();
     }
 
@@ -32,6 +32,7 @@ public class KryoSerializer implements AutoCloseable {
         }
         return ByteBuffer.wrap( out.getBuffer(), 0, (int)out.total() );
     }
+
     public <T> T deserialize(ByteBuffer bb, Class<T> type) {
         try {
             return serializer.readObject( new Input( bb.array() ), type );
