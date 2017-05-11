@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import edu.utexas.arlut.ciads.scratch.graph.Edge;
 import edu.utexas.arlut.ciads.scratch.graph.Graph;
 import edu.utexas.arlut.ciads.scratch.graph.Vertex;
+import edu.utexas.arlut.ciads.scratch.xgraph.storage.XStorage;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -1,22 +1,26 @@
 // CLASSIFICATION NOTICE: This file is UNCLASSIFIED
-package edu.utexas.arlut.ciads.scratch.xgraph;
+package edu.utexas.arlut.ciads.scratch.xgraph.storage;
 
+import edu.utexas.arlut.ciads.scratch.xgraph.XEdge;
+import edu.utexas.arlut.ciads.scratch.xgraph.XVertex;
+import lombok.extern.slf4j.Slf4j;
 import org.ehcache.Cache;
+import org.ehcache.UserManagedCache;
+import org.ehcache.config.builders.UserManagedCacheBuilder;
 
-public class BaselineStorage implements Storage {
-
-
+@Slf4j
+public class TransactionStorage implements Storage {
     @Override
     public void addVertex(XVertex v) {
-        vertexCache.put( v.getRawId(), v );
+
     }
     @Override
     public void removeVertex(Long id) {
-        vertexCache.remove( id );
+
     }
     @Override
     public XVertex getVertex(Long id) {
-        return vertexCache.get( id );
+        return null;
     }
     @Override
     public void addEdge(XEdge e) {
@@ -31,7 +35,7 @@ public class BaselineStorage implements Storage {
         return null;
     }
     // =================================
-    private BaselineStorage(Cache<Long, XVertex> vertexCache, Cache<Long, XEdge> edgeCache) {
+    private TransactionStorage(Cache<Long, XVertex> vertexCache, Cache<Long, XEdge> edgeCache) {
         this.vertexCache = vertexCache;
         this.edgeCache = edgeCache;
     }
@@ -44,16 +48,22 @@ public class BaselineStorage implements Storage {
     public static class Builder {
         private Cache<Long, XVertex> vertexCache;
         private Cache<Long, XEdge> edgeCache;
-        public Builder setVertexCache(Cache<Long, XVertex> vertexCache) {
+        public Builder setVertexBaseline(Cache<Long, XVertex> vertexCache) {
             this.vertexCache = vertexCache;
+
+            UserManagedCache<Long, XVertex> umc =
+                    UserManagedCacheBuilder.newUserManagedCacheBuilder( Long.class, XVertex.class )
+                                           .withLoaderWriter( new XVertexLoader( vertexCache ) )
+                                           .build( true );
             return this;
         }
-        public Builder setEdgeCache(Cache<Long, XEdge> edgeCache) {
+        public Builder setEdgeBaseline(Cache<Long, XEdge> edgeCache) {
             this.edgeCache = edgeCache;
             return this;
         }
-        public BaselineStorage build() {
-            return new BaselineStorage( vertexCache, edgeCache );
+        public TransactionStorage build() {
+            return new TransactionStorage( vertexCache, edgeCache );
         }
     }
+
 }

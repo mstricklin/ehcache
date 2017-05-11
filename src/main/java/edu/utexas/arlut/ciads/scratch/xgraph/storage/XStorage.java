@@ -1,9 +1,13 @@
 // CLASSIFICATION NOTICE: This file is UNCLASSIFIED
-package edu.utexas.arlut.ciads.scratch.xgraph;
+package edu.utexas.arlut.ciads.scratch.xgraph.storage;
 
 import java.net.URL;
 
 import edu.utexas.arlut.ciads.scratch.App;
+import edu.utexas.arlut.ciads.scratch.xgraph.XEdge;
+import edu.utexas.arlut.ciads.scratch.xgraph.XVertex;
+import edu.utexas.arlut.ciads.scratch.xgraph.storage.BaselineStorage;
+import edu.utexas.arlut.ciads.scratch.xgraph.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
@@ -17,7 +21,7 @@ public class XStorage {
     private static final String EDGE_CACHE_NAME = "edges";
 
 
-    XStorage() {
+    public XStorage() {
         final URL configURL = App.class.getClassLoader().getResource( CONFIG_NAME );
         XmlConfiguration xmlConfig = new XmlConfiguration( configURL );
         cm = CacheManagerBuilder.newCacheManager( xmlConfig );
@@ -32,11 +36,11 @@ public class XStorage {
                                   .build();
 
     }
-    void shutdown() {
+    public void shutdown() {
         cm.close();
     }
 
-    Storage getBaseline() {
+    public Storage getBaseline() {
         return baseline;
     }
 

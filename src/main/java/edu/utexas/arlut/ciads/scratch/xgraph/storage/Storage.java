@@ -1,5 +1,8 @@
 // CLASSIFICATION NOTICE: This file is UNCLASSIFIED
-package edu.utexas.arlut.ciads.scratch.xgraph;
+package edu.utexas.arlut.ciads.scratch.xgraph.storage;
+
+import edu.utexas.arlut.ciads.scratch.xgraph.XEdge;
+import edu.utexas.arlut.ciads.scratch.xgraph.XVertex;
 
 public interface Storage {
     void addVertex(XVertex v);
