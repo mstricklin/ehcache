@@ -14,6 +14,10 @@ public class XEdge extends XElement implements Edge {
     public static XEdge of(long id, XVertex out, XVertex in, String label) {
         return new XEdge(id, out, in, label);
     }
+    public static XEdge of(XEdge e) {
+        return new XEdge(e);
+    }
+
     @Override
     public Vertex getOutVertex() {
         return null;
@@ -27,11 +31,17 @@ public class XEdge extends XElement implements Edge {
         return label;
     }
     // =================================
-    private XEdge(long id, XVertex out, XVertex in, String label) {
+    private XEdge(long id, final XVertex out, final XVertex in, String label) {
         super(id);
         this.label = label;
         this.outVertexID = out.getRawId();
         this.inVertexID = in.getRawId();
+    }
+    private XEdge(final XEdge e) {
+        super(e);
+        this.label = e.label;
+        this.outVertexID = e.outVertexID;
+        this.inVertexID = e.inVertexID;
     }
     private final String label;
     private final long outVertexID, inVertexID;

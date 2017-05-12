@@ -22,15 +22,15 @@ public class BaselineStorage implements Storage {
     }
     @Override
     public void addEdge(XEdge e) {
-
+        edgeCache.put( e.getRawId(), e );
     }
     @Override
     public void removeEdge(Long id) {
-
+        edgeCache.remove( id );
     }
     @Override
     public XEdge getEdge(Long id) {
-        return null;
+        return edgeCache.get( id );
     }
     // =================================
     private BaselineStorage(Cache<Long, XVertex> vertexCache, Cache<Long, XEdge> edgeCache) {
